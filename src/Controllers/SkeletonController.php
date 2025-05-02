@@ -5,28 +5,24 @@ namespace Danupe\Plugin\Skeleton\Controllers;
 use Danupe\Core\Classes\Controller;
 use Danupe\Plugin\User\Classes\Validate;
 use Danupe\Plugin\Skeleton\Models\Skeleton;
-use Psr\Http\Skeleton\ResponseInterface as Response;
-use Psr\Http\Skeleton\ServerRequestInterface as Request;
 
 class SkeletonController extends Controller
 {
-    public function index($request, $response)
+    public function index()
     {
         $skeletons = new Skeleton();
         $skeletons = $skeletons->orderBy(['id' => 'asc'])->all(['`id`', '`text`']);
         danupe()->view()->get('plugin-skeleton', 'skeletons/index', ['skeletons' => $skeletons, 'title' => 'skeletons']);
-        return $response;
     }
 
-    public function edit($request, $response, $args)
+    public function edit()
     {
         $skeleton = new Skeleton();
-        $skeleton = $skeleton->first(danupe()->data()->get($args, 'id'));
+        $skeleton = $skeleton->first(danupe()->input()->get('id'));
         danupe()->view()->get('plugin-skeleton', 'skeletons/edit', ['Skeleton' => $skeleton, 'title' => 'Edit Skeleton']);
-        return $response;
     }
 
-    public function update_post(Request $request, Response $response, array $args)
+    public function update_post()
     {
         $validator = new Validate();
 
@@ -49,13 +45,12 @@ class SkeletonController extends Controller
         }
     }
 
-    public function create(Request $request, Response $response)
+    public function create()
     {
         danupe()->view()->get('plugin-skeleton', 'skeletons/create', ['title' => 'Create']);
-        return $response;
     }
 
-    public function create_post(Request $request, Response $response)
+    public function create_post()
     {
 
         $validator = new Validate();
@@ -77,7 +72,7 @@ class SkeletonController extends Controller
         }
     }
 
-    public function delete_post(Request $request, Response $response, array $args)
+    public function delete_post()
     {
         $validator = new Validate();
         $rules = [
